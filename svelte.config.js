@@ -15,7 +15,8 @@ export default {
 			strict: false
 		}),
 		alias: {
-			$components: resolve('./src/components')
+			$components: resolve('./src/components'),
+			$stores: resolve('./src/stores')
 		}
 	}
 };
