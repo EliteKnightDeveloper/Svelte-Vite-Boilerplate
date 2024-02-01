@@ -5,6 +5,8 @@
 	import Counter from '$components/Counter/Counter.svelte';
 	import Button from '$components/Button/Button.svelte';
 
+	import toast, { Toaster } from 'svelte-french-toast';
+
 	interface CounterItem {
 		inputValue: string;
 		count: number;
@@ -14,6 +16,7 @@
 
 	const addCounter = () => {
 		counters = [...counters, { inputValue: 'new', count: 0 }];
+		toast.success('Created!');
 	};
 
 	const increaseCount = (index: number) => {
@@ -29,6 +32,13 @@
 		counters[index].count = 0;
 	};
 
+	const removeCounter = (index: number) => {
+		counters = counters.filter((_, currentIndex) => currentIndex !== index);
+		toast.success('Removed!', {
+			icon: '👏'
+		});
+	};
+
 	$: titleList = counters.map((counter) => counter.inputValue).join(', ');
 	$: sumOfCount = counters.reduce((sum, counter) => sum + counter.count, 0);
 </script>
@@ -37,7 +47,7 @@
 	<title>Home</title>
 	<meta name="description" content="Svelte demo app" />
 </svelte:head>
-
+<Toaster />
 <section class="flex flex-col w-full justify-start items-center">
 	<h1>
 		<span class="welcome">
@@ -60,9 +70,7 @@
 					increase={() => increaseCount(index)}
 					decrease={() => decreaseCount(index)}
 					init={() => initCount(index)}
-					remove={(indexToRemove) => {
-						counters = counters.filter((_, currentIndex) => currentIndex !== indexToRemove);
-					}}
+					remove={() => removeCounter(index)}
 				/>
 			{/each}
 			<Button label="New Counter" onClick={addCounter} color="bg-red-500" />
